@@ -2,14 +2,18 @@
 import Fastify from "fastify";
 import { data } from "./item.js";
 
-const app = Fastify({logger:true})
+import auth from "./route/auth.js";
+import fastifyCors from "@fastify/cors";
 
-app.get('/:id', (req, res)=>{
-    let {id} = req.params;
-    let item = data.find((item)=>item.id == id)
-    res.send(item)
+const app = Fastify({logger:true})
+app.register(auth);
+app.register(fastifyCors, {
+  origin:'*', 
+  methods:['POST', 'PUT', 'GET'],
+  allowedHeaders:['Content-Type'],
 
 })
+
 
 
 app.listen({ port: 3000 }, function (err, address) {
